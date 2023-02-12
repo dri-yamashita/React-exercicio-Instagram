@@ -10,19 +10,26 @@ function App() {
 
   useEffect(() => {
     const makeRequest = async () => {
-      console.log('fazendo requisição');
       const response = await fetcher("photos");
-      console.log('requisição terminou');
-      //console.log(response);
-      setPhotos((prevPhotos) => {
-        return response;
-      });
-     //console.log(photos, "array de photos");
+      setPhotos(response);
     };
 
     makeRequest();
   }, []);
   //console.log(photos);
+
+  const transformedPhotos = React.useMemo(() => {
+    console.log("transformando as fotos");
+    return "fotos transformadas";
+  }, [photos]);
+
+  const transformedPhotos2 = () => {
+    console.log("oi");
+    return "outras fotos transformadas";
+  };
+
+  console.log(transformedPhotos2());
+  console.log(transformedPhotos);
 
   return (
     <Grid>
@@ -32,8 +39,7 @@ function App() {
       <GridItem>
         <Header />
         <Highlights />
-        <input placeholder="oie teste" />
-        {/*photos.map((photo) => ( <img key={photo.id} src = {photo.urls.small} />))} */}
+        {photos.map((photo) => ( <img key={photo.id} src = {photo.urls.small} />))}
       </GridItem>
     </Grid>
   );
