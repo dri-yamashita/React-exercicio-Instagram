@@ -7,6 +7,7 @@ import {Grid, GridItem} from "./ui/grid";
 
 function App() {
   const [photos, setPhotos] = React.useState([]);
+  const [text, setText] = React.useState("");
 
   useEffect(() => {
     const makeRequest = async () => {
@@ -18,25 +19,29 @@ function App() {
   }, []);
   //console.log(photos);
 
-  const transformedPhotos = React.useMemo(() => {
-    console.log("transformando as fotos");
-    return "fotos transformadas";
+  const allSmallPhotosMemoized = React.useMemo(() => {
+    console.log('calling memoized function')
+    return photos.map(item => item.urls.small);
   }, [photos]);
 
-  const transformedPhotos2 = () => {
-    console.log("oi");
-    return "outras fotos transformadas";
+  const allSmallPhotosNOTMemoized = () => {
+    console.log('calling NOT memoized function')
+    return photos.map((item) => item.urls.small);
   };
 
-  console.log(transformedPhotos2());
-  console.log(transformedPhotos);
+allSmallPhotosNOTMemoized();
 
   return (
-    <Grid>
+    <Grid>  
       <GridItem>
         <Navbar />
       </GridItem>
       <GridItem>
+      <input
+        placeholder="INPUT PARA RERENDERIZAR"
+        onChange={(e) => setText(e.currentTarget.value)}
+        style={{width: "90%", height: 50, border: "1px red solid", fontSize: 28 }}
+      />
         <Header />
         <Highlights />
         {photos.map((photo) => ( <img key={photo.id} src = {photo.urls.small} />))}
