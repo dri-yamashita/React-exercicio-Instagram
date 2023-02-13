@@ -16,8 +16,11 @@ function App() {
     };
 
     makeRequest();
-  }, []);
+  }, []); 
+
   //console.log(photos);
+
+//exemplo useMemo
 
   const allSmallPhotosMemoized = React.useMemo(() => {
     console.log('calling memoized function')
@@ -25,11 +28,42 @@ function App() {
   }, [photos]);
 
   const allSmallPhotosNOTMemoized = () => {
-    console.log('calling NOT memoized function')
+    //console.log('calling NOT memoized function')
     return photos.map((item) => item.urls.small);
   };
 
-allSmallPhotosNOTMemoized();
+  console.log(allSmallPhotosMemoized);
+  allSmallPhotosNOTMemoized();
+
+  //fim do exemplo
+
+  //exemplo useCallback
+
+const onChangeHandler = React.useCallback((e) => {
+  console.log("chamando set Text");
+  console.log(photos);
+  setText(e.currentTarget.value);
+  return "bla";
+}, [photos]);
+
+//console.log(onChangeHandler);
+
+const onChangeHandlerWithoutCallback = (e) => {
+  console.log("chamando set Text");
+  console.log(photos);
+  setText(e.currentTarget.value);
+};
+
+
+//exemplo para buscar imagem ao clicar no botão
+
+const searchImages = React.useCallback (async () => {
+  console.log(text);
+  const response = await fetcher("photos");
+  setPhotos(response);
+}, [text]);
+
+//fim do exemplo de uso do callback
 
   return (
     <Grid>  
@@ -39,12 +73,30 @@ allSmallPhotosNOTMemoized();
       <GridItem>
       <input
         placeholder="INPUT PARA RERENDERIZAR"
-        onChange={(e) => setText(e.currentTarget.value)}
-        style={{width: "90%", height: 50, border: "1px red solid", fontSize: 28 }}
+        onChange={onChangeHandler}
+        style={{
+          width: "90%",
+          height: 50,
+          border: "1px red solid",
+          fontSize: 28 
+        }}
       />
-        <Header />
+        <Header imagesNames={allSmallPhotosMemoized}/>
         <Highlights />
-        {photos.map((photo) => ( <img key={photo.id} src = {photo.urls.small} />))}
+        <button 
+        style={{
+          width: "90%", 
+          height: 50, 
+          border: "1px red solid", 
+          fontSize: 28 
+          }} 
+          onClick={searchImages}
+          >
+            BUSCAR IMAGENS
+          </button>
+        {photos.map((photo) => ( 
+        <img key={photo.id} src = {photo.urls.small} />
+        ))}
       </GridItem>
     </Grid>
   );
